@@ -1,9 +1,11 @@
 import PlaceholderImage from "@/assets/images/background-image.png";
 import Button from "@/components/Button";
+import CircleButton from "@/components/CircleButton";
+import IconButton from "@/components/IconButton";
 import ImageViewer from "@/components/ImageViewer";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
@@ -25,6 +27,18 @@ export default function Index() {
     }
   };
 
+  const onReset = () => {
+    setSelectedImage(undefined);
+  };
+
+  const onAddSticker = () => {
+    // we will implement this later
+  };
+
+  const onSaveImageAsync = async () => {
+    // we will implement this later
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -32,12 +46,34 @@ export default function Index() {
           imgSource={selectedImage ? { uri: selectedImage } : PlaceholderImage}
         />
       </View>
-      <View style={styles.footerContainer}>
-        <Button theme="primary" onPress={pickImageAsync}>
-          Choose a photo
-        </Button>
-        <Button>Use this photo</Button>
-      </View>
+      {selectedImage ? (
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <IconButton icon="refresh" label="Reset" onPress={onReset} />
+            <CircleButton onPress={onAddSticker} />
+            <IconButton
+              icon="save-alt"
+              label="Save"
+              onPress={onSaveImageAsync}
+            />
+          </View>
+        </View>
+      ) : (
+        <View style={styles.footerContainer}>
+          <Button theme="primary" onPress={pickImageAsync}>
+            Choose a photo
+          </Button>
+          <Button
+            onPress={() =>
+              setSelectedImage(
+                Platform.OS === "web" ? PlaceholderImage.uri : PlaceholderImage
+              )
+            }
+          >
+            Use this photo
+          </Button>
+        </View>
+      )}
     </View>
   );
 }
@@ -59,5 +95,13 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     alignItems: "center",
+  },
+  optionsContainer: {
+    position: "absolute",
+    bottom: 80,
+  },
+  optionsRow: {
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
