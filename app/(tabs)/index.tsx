@@ -1,14 +1,21 @@
 import PlaceholderImage from "@/assets/images/background-image.png";
 import Button from "@/components/Button";
 import CircleButton from "@/components/CircleButton";
+import EmojiList from "@/components/EmojiList";
+import EmojiPicker from "@/components/EmojiPicker";
 import IconButton from "@/components/IconButton";
 import ImageViewer from "@/components/ImageViewer";
+import { ImageSource } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
+    undefined
+  );
+  const [isVisible, setIsVisible] = useState(false);
+  const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
     undefined
   );
 
@@ -32,7 +39,7 @@ export default function Index() {
   };
 
   const onAddSticker = () => {
-    // we will implement this later
+    setIsVisible(true);
   };
 
   const onSaveImageAsync = async () => {
@@ -74,6 +81,12 @@ export default function Index() {
           </Button>
         </View>
       )}
+      <EmojiPicker isVisible={isVisible} onClose={() => setIsVisible(false)}>
+        <EmojiList
+          onCloseModal={() => setIsVisible(false)}
+          onSelect={setPickedEmoji}
+        />
+      </EmojiPicker>
     </View>
   );
 }
