@@ -11,6 +11,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as MediaLibrary from "expo-media-library";
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<undefined | string>(
@@ -20,6 +21,11 @@ export default function Index() {
   const [pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(
     undefined
   );
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+
+  if (status === null) {
+    requestPermission();
+  }
 
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
